@@ -9,3 +9,8 @@ binding = "ASSETS"
 
 [observability]
 enabled = true
+
+[[d1_databases]]
+binding = "TFM_DB"
+database_name = "tfm-db"
+database_id = "PLACEHOLDER"  # Replace after: wrangler d1 create tfm-db
