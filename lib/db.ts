@@ -1,7 +1,7 @@
 import { getEnv } from "./cloudflare-env";
 
-export async function getDB(): Promise<D1Database> {
-  const env = await getEnv();
+export function getDB(): D1Database {
+  const env = getEnv();
   return env.TFM_DB;
 }
 
@@ -10,7 +10,7 @@ export async function getDB(): Promise<D1Database> {
  * Called once at startup (or on first request) — idempotent.
  */
 export async function ensureSchema() {
-  const db = await getDB();
+  const db = getDB();
 
   await db
     .prepare(

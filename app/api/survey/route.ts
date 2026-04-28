@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const { depression, anxiety, stress } = computeDASS(dass);
 
     await ensureSchema();
-    const db = await getDB();
+    const db = getDB();
 
     const id            = uuidv4();
     const participantId = uuidv4();
