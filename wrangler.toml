@@ -12,5 +12,5 @@ enabled = true
 
 [[d1_databases]]
 binding = "TFM_DB"
-database_name = "tfm-db"
-database_id = "PLACEHOLDER"  # Replace after: wrangler d1 create tfm-db
+database_name = "tfm"
+database_id = "e728908c-aaa2-4fed-9abe-26f6cb6473d4"
