@@ -161,9 +161,9 @@ export const HOUSEHOLD_OPTIONS = [
 
 export const INCOME_OPTIONS = [
   "Prefiero no contestar",
-  "Menos de 15.000 €/año",
-  "15.000 – 25.000 €/año",
-  "25.000 – 40.000 €/año",
-  "40.000 – 60.000 €/año",
-  "Más de 60.000 €/año",
+  "Menos de 1.000 € netos/mes",
+  "1.000 – 1.500 € netos/mes",
+  "1.500 – 2.500 € netos/mes",
+  "2.500 – 4.000 € netos/mes",
+  "Más de 4.000 € netos/mes",
 ];
