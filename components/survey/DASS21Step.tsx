@@ -13,10 +13,12 @@ export default function DASS21Step({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(DASS_ITEMS.length).fill(null)
   );
-  const [attempted, setAttempted] = useState(false);
+  const [frozenIdxs, setFrozenIdxs] = useState<number[] | null>(null);
 
   const allAnswered = answers.every((a) => a !== null);
-  const unansweredCount = answers.filter((a) => a === null).length;
+  const unansweredCount = frozenIdxs
+    ? frozenIdxs.filter((i) => answers[i] === null).length
+    : answers.filter((a) => a === null).length;
 
   function setAnswer(idx: number, value: number) {
     setAnswers((prev) => {
@@ -28,14 +30,16 @@ export default function DASS21Step({ onNext, onBack }: Props) {
 
   function handleNext() {
     if (!allAnswered) {
-      setAttempted(true);
+      if (!frozenIdxs) {
+        setFrozenIdxs(answers.map((a, i) => a === null ? i : -1).filter((i) => i !== -1));
+      }
       return;
     }
     onNext(answers as number[]);
   }
 
-  const visibleItems = attempted && !allAnswered
-    ? DASS_ITEMS.filter((_, idx) => answers[idx] === null)
+  const visibleItems = frozenIdxs && !allAnswered
+    ? DASS_ITEMS.filter((_, idx) => frozenIdxs.includes(idx))
     : DASS_ITEMS;
 
   const colTemplate = `3fr repeat(${DASS_LABELS.length}, minmax(32px, 48px))`;
@@ -72,7 +76,7 @@ export default function DASS21Step({ onNext, onBack }: Props) {
       </div>
 
       {/* Unanswered warning */}
-      {attempted && !allAnswered && (
+      {frozenIdxs && !allAnswered && (
         <p className="text-sm text-accent font-medium">
           Faltan {unansweredCount} {unansweredCount === 1 ? "pregunta" : "preguntas"} por responder:
         </p>

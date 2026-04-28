@@ -13,10 +13,12 @@ export default function PSS14Step({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(PSS_ITEMS.length).fill(null)
   );
-  const [attempted, setAttempted] = useState(false);
+  const [frozenIdxs, setFrozenIdxs] = useState<number[] | null>(null);
 
   const allAnswered = answers.every((a) => a !== null);
-  const unansweredCount = answers.filter((a) => a === null).length;
+  const unansweredCount = frozenIdxs
+    ? frozenIdxs.filter((i) => answers[i] === null).length
+    : answers.filter((a) => a === null).length;
 
   function setAnswer(idx: number, value: number) {
     setAnswers((prev) => {
@@ -28,14 +30,17 @@ export default function PSS14Step({ onNext, onBack }: Props) {
 
   function handleNext() {
     if (!allAnswered) {
-      setAttempted(true);
+      // Freeze the list of currently-unanswered indices on first attempt
+      if (!frozenIdxs) {
+        setFrozenIdxs(answers.map((a, i) => a === null ? i : -1).filter((i) => i !== -1));
+      }
       return;
     }
     onNext(answers as number[]);
   }
 
-  const visibleItems = attempted && !allAnswered
-    ? PSS_ITEMS.filter((_, idx) => answers[idx] === null)
+  const visibleItems = frozenIdxs && !allAnswered
+    ? PSS_ITEMS.filter((_, idx) => frozenIdxs.includes(idx))
     : PSS_ITEMS;
 
   const colTemplate = `3fr repeat(${PSS_LABELS.length}, minmax(32px, 48px))`;
@@ -73,7 +78,7 @@ export default function PSS14Step({ onNext, onBack }: Props) {
       </div>
 
       {/* Unanswered warning */}
-      {attempted && !allAnswered && (
+      {frozenIdxs && !allAnswered && (
         <p className="text-sm text-accent font-medium">
           Faltan {unansweredCount} {unansweredCount === 1 ? "pregunta" : "preguntas"} por responder:
         </p>
