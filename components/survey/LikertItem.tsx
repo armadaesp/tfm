@@ -77,9 +77,6 @@ export default function LikertItem({ questionNumber, text, labels, value, onChan
         </div>
       </div>
 
-      {value === null && (
-        <p className="mt-1 text-xs text-accent">* Obligatorio</p>
-      )}
     </div>
   );
 }

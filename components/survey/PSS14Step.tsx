@@ -13,8 +13,10 @@ export default function PSS14Step({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(PSS_ITEMS.length).fill(null)
   );
+  const [attempted, setAttempted] = useState(false);
 
   const allAnswered = answers.every((a) => a !== null);
+  const unansweredCount = answers.filter((a) => a === null).length;
 
   function setAnswer(idx: number, value: number) {
     setAnswers((prev) => {
@@ -23,6 +25,18 @@ export default function PSS14Step({ onNext, onBack }: Props) {
       return next;
     });
   }
+
+  function handleNext() {
+    if (!allAnswered) {
+      setAttempted(true);
+      return;
+    }
+    onNext(answers as number[]);
+  }
+
+  const visibleItems = attempted && !allAnswered
+    ? PSS_ITEMS.filter((_, idx) => answers[idx] === null)
+    : PSS_ITEMS;
 
   const colTemplate = `3fr repeat(${PSS_LABELS.length}, minmax(32px, 48px))`;
 
@@ -47,7 +61,7 @@ export default function PSS14Step({ onNext, onBack }: Props) {
         </div>
       </div>
 
-      {/* Desktop: sticky header row — stays below the navbar (top-16 = 64px) */}
+      {/* Desktop: sticky header row */}
       <div
         className="hidden sm:grid sticky top-16 z-20 bg-white border-b border-t border-surface-border py-2 -mx-4 sm:-mx-6 px-4 sm:px-6"
         style={{ gridTemplateColumns: colTemplate }}
@@ -58,22 +72,28 @@ export default function PSS14Step({ onNext, onBack }: Props) {
         ))}
       </div>
 
-      <div>
-        {PSS_ITEMS.map((item, idx) => (
-          <LikertItem
-            key={item.id}
-            questionNumber={item.id}
-            text={item.text}
-            labels={PSS_LABELS}
-            value={answers[idx]}
-            onChange={(v) => setAnswer(idx, v)}
-          />
-        ))}
-      </div>
-
-      {!allAnswered && (
-        <p className="text-xs text-accent">* Debe responder todas las preguntas para continuar.</p>
+      {/* Unanswered warning */}
+      {attempted && !allAnswered && (
+        <p className="text-sm text-accent font-medium">
+          Faltan {unansweredCount} {unansweredCount === 1 ? "pregunta" : "preguntas"} por responder:
+        </p>
       )}
+
+      <div>
+        {visibleItems.map((item) => {
+          const idx = PSS_ITEMS.indexOf(item);
+          return (
+            <LikertItem
+              key={item.id}
+              questionNumber={item.id}
+              text={item.text}
+              labels={PSS_LABELS}
+              value={answers[idx]}
+              onChange={(v) => setAnswer(idx, v)}
+            />
+          );
+        })}
+      </div>
 
       <div className="flex gap-3">
         <button type="button" onClick={onBack} className="btn-outline">
@@ -81,8 +101,7 @@ export default function PSS14Step({ onNext, onBack }: Props) {
         </button>
         <button
           type="button"
-          onClick={() => onNext(answers as number[])}
-          disabled={!allAnswered}
+          onClick={handleNext}
           className="btn-primary flex-1"
         >
           Continuar →
