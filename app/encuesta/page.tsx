@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ConsentStep from "@/components/survey/ConsentStep";
 import DemographicsStep, { DemographicsData } from "@/components/survey/DemographicsStep";
@@ -20,6 +20,10 @@ export default function EncuestaPage() {
   const [pssAnswers, setPssAnswers]     = useState<number[] | null>(null);
   const [dassAnswers, setDassAnswers]   = useState<number[] | null>(null);
   const [submitError, setSubmitError]   = useState<string | null>(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [phase]);
 
   function goBack() {
     const idx = PHASE_ORDER.indexOf(phase);
