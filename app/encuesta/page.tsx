@@ -6,31 +6,28 @@ import ConsentStep from "@/components/survey/ConsentStep";
 import DemographicsStep, { DemographicsData } from "@/components/survey/DemographicsStep";
 import PSS14Step from "@/components/survey/PSS14Step";
 import DASS21Step from "@/components/survey/DASS21Step";
-import CommentsStep from "@/components/survey/CommentsStep";
 
-type Phase = "consent" | "demographics" | "pss14" | "dass21" | "comments" | "submitting";
+type Phase = "consent" | "demographics" | "pss14" | "dass21" | "submitting";
 
-const PHASE_ORDER: Phase[] = ["consent", "demographics", "pss14", "dass21", "comments"];
+const PHASE_ORDER: Phase[] = ["consent", "demographics", "pss14", "dass21"];
 
 export default function EncuestaPage() {
   const router = useRouter();
-  const [phase, setPhase] = useState<Phase>("consent");
+  const [phase, setPhase]               = useState<Phase>("consent");
   const [demographics, setDemographics] = useState<DemographicsData | null>(null);
-  const [treatment, setTreatment] = useState("");
+  const [treatment, setTreatment]       = useState("");
   const [treatmentDescription, setTreatmentDescription] = useState("");
-  const [pssAnswers, setPssAnswers] = useState<number[] | null>(null);
-  const [dassAnswers, setDassAnswers] = useState<number[] | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [pssAnswers, setPssAnswers]     = useState<number[] | null>(null);
+  const [dassAnswers, setDassAnswers]   = useState<number[] | null>(null);
+  const [submitError, setSubmitError]   = useState<string | null>(null);
 
   function goBack() {
     const idx = PHASE_ORDER.indexOf(phase);
     if (idx > 0) setPhase(PHASE_ORDER[idx - 1]);
   }
 
-  async function submitSurvey(comments: string) {
+  async function submitSurvey(dass: number[]) {
     setPhase("submitting");
-    setIsSubmitting(true);
     setSubmitError(null);
 
     try {
@@ -42,8 +39,7 @@ export default function EncuestaPage() {
           treatment,
           treatmentDescription,
           pss: pssAnswers,
-          dass: dassAnswers,
-          comments,
+          dass,
         }),
       });
 
@@ -52,21 +48,43 @@ export default function EncuestaPage() {
         throw new Error((err as { error?: string }).error ?? `HTTP ${res.status}`);
       }
 
-      // Store scores for the thank-you page
+      const { participant_id } = await res.json() as { participant_id?: string };
+
       if (typeof window !== "undefined") {
         sessionStorage.setItem("survey_pss", JSON.stringify(pssAnswers));
-        sessionStorage.setItem("survey_dass", JSON.stringify(dassAnswers));
+        sessionStorage.setItem("survey_dass", JSON.stringify(dass));
+        if (participant_id) sessionStorage.setItem("survey_pid", participant_id);
       }
 
       router.push("/gracias");
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : "Error desconocido");
-      setPhase("comments");
-      setIsSubmitting(false);
     }
   }
 
   if (phase === "submitting") {
+    if (submitError) {
+      return (
+        <main className="page animate-in" style={{ paddingTop: 60 }}>
+          <div className="notice" style={{ marginBottom: 24 }}>
+            Error al enviar las respuestas: {submitError}
+          </div>
+          <div className="btn-row">
+            <button type="button" className="btn btn-link" onClick={() => {
+              setSubmitError(null);
+              setPhase("dass21");
+            }}>
+              ← Volver al cuestionario
+            </button>
+            <button type="button" className="btn btn-accent" onClick={() => {
+              if (dassAnswers) { setSubmitError(null); submitSurvey(dassAnswers); }
+            }}>
+              Reintentar →
+            </button>
+          </div>
+        </main>
+      );
+    }
     return (
       <main className="page text-center animate-in" style={{ paddingTop: 80 }}>
         <div className="spinner" />
@@ -107,21 +125,13 @@ export default function EncuestaPage() {
     );
   }
 
-  if (phase === "dass21") {
-    return (
-      <DASS21Step
-        onNext={(answers) => { setDassAnswers(answers); setPhase("comments"); }}
-        onBack={goBack}
-      />
-    );
-  }
-
   return (
-    <CommentsStep
-      onNext={submitSurvey}
+    <DASS21Step
+      onNext={(answers) => {
+        setDassAnswers(answers);
+        submitSurvey(answers);
+      }}
       onBack={goBack}
-      isSubmitting={isSubmitting}
-      submitError={submitError}
     />
   );
 }

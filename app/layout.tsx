@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${interTight.variable} ${sourceSerif4.variable}`}>
+    <html lang="es" data-theme="slate" className={`${interTight.variable} ${sourceSerif4.variable}`}>
       <body className="app-shell">
         <Navbar />
         <div style={{ flex: 1 }}>{children}</div>

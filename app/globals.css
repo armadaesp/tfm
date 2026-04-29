@@ -953,6 +953,7 @@ textarea { resize: vertical; min-height: 100px; }
   gap: 8px;
   font-size: 13px;
   color: var(--ink-2);
+  flex: 1;
 }
 .scores-value {
   font-family: var(--font-source-serif-4), 'Source Serif 4', Georgia, serif;
@@ -960,6 +961,14 @@ textarea { resize: vertical; min-height: 100px; }
   font-variant-numeric: tabular-nums;
 }
 .scores-max { color: var(--ink-3); font-size: 13px; }
+.scores-severity {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+  min-width: 60px;
+  text-align: right;
+}
 
 /* small responsive tweaks */
 @media (max-width: 480px) {

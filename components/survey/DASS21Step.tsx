@@ -14,7 +14,6 @@ export default function DASS21Step({ onNext, onBack }: Props) {
   const [answers, setAnswers] = useState<(number | null)[]>(Array(items.length).fill(null));
   const [cursor, setCursor] = useState(0);
   const [showError, setShowError] = useState(false);
-  const [introDismissed, setIntroDismissed] = useState(false);
 
   const allAnswered = answers.every((a) => a !== null);
   const answeredCount = answers.filter((a) => a !== null).length;
@@ -74,67 +73,6 @@ export default function DASS21Step({ onNext, onBack }: Props) {
       </div>
     </div>
   );
-
-  // Intro screen
-  if (!introDismissed) {
-    return (
-      <main className="page animate-in">
-        {stepperHeader}
-        <div style={{ marginTop: 24 }}>
-          <span className="smallcaps smallcaps-muted">Sección III · DASS-21</span>
-          <h2 className="section-title serif" style={{ marginTop: 8, fontSize: 28 }}>
-            Estado emocional<br />
-            <em style={{ fontStyle: "italic", color: "var(--ink-2)" }}>la última semana</em>
-          </h2>
-          <p className="body" style={{ marginTop: 12, maxWidth: 580 }}>
-            Lea cada afirmación e indique cuánto le fue aplicable durante la{" "}
-            <strong>semana pasada</strong>. La escala mide tres dimensiones del estado emocional:
-          </p>
-
-          <div className="subscale-legend">
-            <div className="subscale-row">
-              <span className="subscale-bar depression" />
-              <span className="subscale-name">Depresión</span>
-              <span style={{ color: "var(--ink-3)", fontSize: 13 }}>
-                Anhedonia, desmotivación, desesperanza
-              </span>
-            </div>
-            <div className="subscale-row">
-              <span className="subscale-bar anxiety" />
-              <span className="subscale-name">Ansiedad</span>
-              <span style={{ color: "var(--ink-3)", fontSize: 13 }}>
-                Síntomas físicos, miedo, pánico
-              </span>
-            </div>
-            <div className="subscale-row">
-              <span className="subscale-bar stress" />
-              <span className="subscale-name">Estrés</span>
-              <span style={{ color: "var(--ink-3)", fontSize: 13 }}>
-                Tensión, irritabilidad, agitación
-              </span>
-            </div>
-          </div>
-
-          <p className="body-sm muted" style={{ fontStyle: "italic" }}>
-            21 preguntas · aproximadamente 3 minutos.
-          </p>
-
-          <div className="btn-row" style={{ marginTop: 32 }}>
-            <button type="button" className="btn btn-link" onClick={onBack}>
-              ← Volver a PSS-14
-            </button>
-            <button
-              type="button"
-              className="btn btn-accent flex-1"
-              onClick={() => setIntroDismissed(true)}
-            >
-              Comenzar DASS-21 →
-            </button>
-          </div>
-        </div>
-      </main>
-    );
-  }
 
   const currentItem = items[cursor];
   const accentClass = currentItem.subscale;
@@ -196,9 +134,9 @@ export default function DASS21Step({ onNext, onBack }: Props) {
         <button
           type="button"
           className="btn btn-link"
-          onClick={() => cursor > 0 ? setCursor(cursor - 1) : setIntroDismissed(false)}
+          onClick={() => cursor > 0 ? setCursor(cursor - 1) : onBack()}
         >
-          ← {cursor > 0 ? "Anterior" : "Intro"}
+          ← {cursor > 0 ? "Anterior" : "PSS-14"}
         </button>
         <div className="q-nav-dots">
           {items.map((_, i) => (
