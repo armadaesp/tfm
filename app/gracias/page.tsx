@@ -194,11 +194,6 @@ export default function GraciasPage() {
         </div>
       )}
 
-      <p className="body-sm muted" style={{ marginTop: 32 }}>
-        Si tiene alguna pregunta sobre el estudio, contacte al DPD de UNIR:{" "}
-        <a className="inline-link" href="mailto:ppd@unir.net">ppd@unir.net</a>.
-      </p>
-
       <div style={{ marginTop: 24 }}>
         <Link href="/" className="btn btn-ghost">← Volver al inicio</Link>
       </div>
