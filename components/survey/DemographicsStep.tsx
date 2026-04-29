@@ -27,25 +27,25 @@ interface Props {
   onBack: () => void;
 }
 
-function RadioGroup({ name, options, value, onChange }: {
-  name: string;
+function RadioGroup({
+  options, value, onChange, twoCol,
+}: {
   options: string[];
   value: string;
   onChange: (v: string) => void;
+  twoCol?: boolean;
 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <div className={`radio-group${twoCol ? " radio-group-2col" : ""}`}>
       {options.map((opt) => (
         <button
           key={opt}
           type="button"
+          className={`radio-option${value === opt ? " is-selected" : ""}`}
           onClick={() => onChange(opt)}
-          className={`option-radio text-left ${value === opt ? "option-radio-selected" : "option-radio-unselected"}`}
         >
-          <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full border-2 mr-2 shrink-0 align-middle ${
-            value === opt ? "border-primary bg-primary" : "border-surface-border"
-          }`} />
-          {opt}
+          <span className="radio-dot" />
+          <span>{opt}</span>
         </button>
       ))}
     </div>
@@ -59,12 +59,12 @@ export default function DemographicsStep({ onNext, onBack }: Props) {
     dependents: "", dependentCareFrequency: "", region: "",
     maritalStatus: "", householdSize: "",
   });
+  const [showErrors, setShowErrors] = useState(false);
 
   const set = (key: keyof DemographicsData) => (value: string) =>
     setData((prev) => ({ ...prev, [key]: value }));
 
   const isEmployed = EMPLOYED_STATUSES.includes(data.employmentStatus);
-
   const ageNum = parseInt(data.age, 10);
   const ageValid = !isNaN(ageNum) && ageNum >= 18 && ageNum <= 99;
 
@@ -76,148 +76,195 @@ export default function DemographicsStep({ onNext, onBack }: Props) {
     (data.dependents !== "Sí" || data.dependentCareFrequency) &&
     data.region;
 
+  function handleNext() {
+    if (!canProceed) { setShowErrors(true); return; }
+    onNext(data);
+  }
+
   return (
-    <div className="space-y-8">
+    <main className="page animate-in">
+      {/* Progress header */}
       <div>
-        <p className="section-label mb-1">Datos sociodemográficos</p>
-        <h2 className="text-xl font-bold text-text-primary">Información sobre usted</h2>
-        <p className="text-sm text-text-muted mt-1">
-          Los campos marcados con <span className="text-accent">*</span> son obligatorios.
+        <div className="stepper">
+          {["Consentimiento", "Datos", "PSS-14", "DASS-21", "Comentarios"].map((label, i) => {
+            const n = i + 1;
+            const state = n < 2 ? "is-done" : n === 2 ? "is-active" : "";
+            return (
+              <span key={label}>
+                <span className={`stepper-item ${state}`}>
+                  <span className="stepper-num">{n < 2 ? "✓" : n}</span>
+                  {(n === 2) && <span>{label}</span>}
+                </span>
+                {i < 4 && <span className="stepper-sep">·</span>}
+              </span>
+            );
+          })}
+        </div>
+        <div className="progress-wrap">
+          <span className="progress-label">Datos sociodemográficos</span>
+          <span className="progress-counter tnum">28%</span>
+        </div>
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width: "28%" }} />
+        </div>
+      </div>
+
+      <div style={{ marginTop: 24 }}>
+        <span className="smallcaps smallcaps-muted">Sección I · Sociodemografía</span>
+        <h2 className="section-title serif" style={{ marginTop: 8, fontSize: 28 }}>
+          Información sobre usted
+        </h2>
+        <p className="body" style={{ marginTop: 8 }}>
+          Los campos marcados con <span style={{ color: "var(--accent)" }}>*</span> son
+          obligatorios. Las últimas dos preguntas son opcionales.
         </p>
       </div>
 
-      {/* Sexo */}
-      <div>
-        <label className="form-label">1. Sexo <span className="text-accent">*</span></label>
-        <RadioGroup name="sex" options={SEX_OPTIONS} value={data.sex} onChange={set("sex")} />
-      </div>
-
-      {/* Edad */}
-      <div>
-        <label className="form-label">2. Edad <span className="text-accent">*</span></label>
-        <input
-          type="number"
-          min={18}
-          max={99}
-          placeholder="Introduce tu edad (18–99)"
-          value={data.age}
-          onChange={(e) => set("age")(e.target.value)}
-          className="form-select max-w-xs"
-        />
-        {data.age && !ageValid && (
-          <p className="mt-1 text-xs text-accent">La edad debe estar entre 18 y 99 años.</p>
-        )}
-      </div>
-
-      {/* Nivel de estudios */}
-      <div>
-        <label className="form-label">3. Nivel de estudios <span className="text-accent">*</span></label>
-        <RadioGroup name="education" options={EDUCATION_OPTIONS} value={data.educationLevel} onChange={set("educationLevel")} />
-      </div>
-
-      {/* Situación laboral */}
-      <div>
-        <label className="form-label">4. Situación laboral actual <span className="text-accent">*</span></label>
-        <RadioGroup name="employment" options={EMPLOYMENT_OPTIONS} value={data.employmentStatus} onChange={set("employmentStatus")} />
-      </div>
-
-      {/* Sector (condicional) */}
-      {isEmployed && (
-        <div>
-          <label className="form-label">5. Sector ocupacional <span className="text-accent">*</span></label>
-          <select
-            value={data.occupationalSector}
-            onChange={(e) => set("occupationalSector")(e.target.value)}
-            className="form-select"
-          >
-            <option value="">Selecciona un sector...</option>
-            {SECTOR_OPTIONS.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-          {data.occupationalSector === "Otro" && (
-            <input
-              type="text"
-              placeholder="Especifica el sector"
-              value={data.occupationalSectorOther}
-              onChange={(e) => set("occupationalSectorOther")(e.target.value)}
-              className="form-select mt-2"
-            />
-          )}
+      {showErrors && !canProceed && (
+        <div className="notice" style={{ marginTop: 20 }}>
+          Hay campos obligatorios sin completar. Revise las preguntas marcadas.
         </div>
       )}
 
-      {/* Hijos menores */}
-      <div>
-        <label className="form-label">6. Hijos menores de 18 años en el hogar <span className="text-accent">*</span></label>
-        <RadioGroup name="children" options={CHILDREN_OPTIONS} value={data.childrenUnder18} onChange={set("childrenUnder18")} />
-      </div>
+      <div style={{ marginTop: 24 }}>
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">1.</span>Sexo<span className="required">*</span>
+          </label>
+          <RadioGroup options={SEX_OPTIONS} value={data.sex} onChange={set("sex")} twoCol />
+        </div>
 
-      {/* Personas dependientes */}
-      <div>
-        <label className="form-label">
-          7. Personas dependientes a cargo (mayores, discapacidad, enfermedad crónica){" "}
-          <span className="text-accent">*</span>
-        </label>
-        <RadioGroup name="dependents" options={DEPENDENTS_OPTIONS} value={data.dependents} onChange={set("dependents")} />
-        {data.dependents === "Sí" && (
-          <div className="mt-3 pl-4 border-l-2 border-primary/30">
-            <label className="form-label">
-              ¿Con qué frecuencia asume su cuidado? <span className="text-accent">*</span>
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">2.</span>Edad<span className="required">*</span>
+          </label>
+          <input
+            type="number"
+            min={18}
+            max={99}
+            className="input-narrow"
+            placeholder="18–99"
+            value={data.age}
+            onChange={(e) => set("age")(e.target.value)}
+          />
+          {data.age && !ageValid && (
+            <p className="field-error">La edad debe estar entre 18 y 99 años.</p>
+          )}
+        </div>
+
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">3.</span>Nivel de estudios<span className="required">*</span>
+          </label>
+          <RadioGroup options={EDUCATION_OPTIONS} value={data.educationLevel} onChange={set("educationLevel")} />
+        </div>
+
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">4.</span>Situación laboral actual<span className="required">*</span>
+          </label>
+          <RadioGroup options={EMPLOYMENT_OPTIONS} value={data.employmentStatus} onChange={set("employmentStatus")} />
+        </div>
+
+        {isEmployed && (
+          <div className="field sub-field">
+            <label className="field-label">
+              <span className="field-num">5.</span>Sector ocupacional<span className="required">*</span>
             </label>
-            <RadioGroup
-              name="careFreq"
-              options={CARE_FREQUENCY_OPTIONS}
-              value={data.dependentCareFrequency}
-              onChange={set("dependentCareFrequency")}
-            />
+            <select
+              value={data.occupationalSector}
+              onChange={(e) => set("occupationalSector")(e.target.value)}
+            >
+              <option value="">Selecciona un sector…</option>
+              {SECTOR_OPTIONS.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            {data.occupationalSector === "Otro" && (
+              <input
+                type="text"
+                placeholder="Especifica el sector"
+                style={{ marginTop: 8 }}
+                value={data.occupationalSectorOther}
+                onChange={(e) => set("occupationalSectorOther")(e.target.value)}
+              />
+            )}
           </div>
         )}
+
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">6.</span>Hijos menores de 18 años en el hogar
+            <span className="required">*</span>
+          </label>
+          <RadioGroup options={CHILDREN_OPTIONS} value={data.childrenUnder18} onChange={set("childrenUnder18")} twoCol />
+        </div>
+
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">7.</span>Personas dependientes a cargo
+            <span className="optional">(mayores, discapacidad, enfermedad crónica)</span>
+            <span className="required">*</span>
+          </label>
+          <RadioGroup options={DEPENDENTS_OPTIONS} value={data.dependents} onChange={set("dependents")} twoCol />
+          {data.dependents === "Sí" && (
+            <div className="sub-field">
+              <label className="field-label">
+                ¿Con qué frecuencia asume su cuidado?<span className="required">*</span>
+              </label>
+              <RadioGroup
+                options={CARE_FREQUENCY_OPTIONS}
+                value={data.dependentCareFrequency}
+                onChange={set("dependentCareFrequency")}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">8.</span>Comunidad autónoma de residencia
+            <span className="required">*</span>
+          </label>
+          <select
+            value={data.region}
+            onChange={(e) => set("region")(e.target.value)}
+          >
+            <option value="">Selecciona una comunidad…</option>
+            {REGIONS.map((r) => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
+        </div>
+
+        <hr className="divider" />
+        <p className="body-sm muted" style={{ marginTop: -16, marginBottom: 16, fontStyle: "italic" }}>
+          Las siguientes preguntas son opcionales.
+        </p>
+
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">9.</span>Estado civil / situación de pareja
+            <span className="optional">(opcional)</span>
+          </label>
+          <RadioGroup options={MARITAL_OPTIONS} value={data.maritalStatus} onChange={set("maritalStatus")} />
+        </div>
+
+        <div className="field">
+          <label className="field-label">
+            <span className="field-num">10.</span>Número de personas en el hogar
+            <span className="optional">(opcional)</span>
+          </label>
+          <RadioGroup options={HOUSEHOLD_OPTIONS} value={data.householdSize} onChange={set("householdSize")} twoCol />
+        </div>
       </div>
 
-      {/* Comunidad autónoma */}
-      <div>
-        <label className="form-label">8. Comunidad autónoma de residencia <span className="text-accent">*</span></label>
-        <select
-          value={data.region}
-          onChange={(e) => set("region")(e.target.value)}
-          className="form-select"
-        >
-          <option value="">Selecciona una comunidad...</option>
-          {REGIONS.map((r) => (
-            <option key={r} value={r}>{r}</option>
-          ))}
-        </select>
-      </div>
-
-      <hr className="border-surface-border" />
-      <p className="text-xs text-text-muted -mt-4">Las siguientes preguntas son opcionales.</p>
-
-      {/* Estado civil (opcional) */}
-      <div>
-        <label className="form-label">9. Estado civil / situación de pareja <span className="text-text-muted font-normal">(opcional)</span></label>
-        <RadioGroup name="marital" options={MARITAL_OPTIONS} value={data.maritalStatus} onChange={set("maritalStatus")} />
-      </div>
-
-      {/* Nº personas en el hogar (opcional) */}
-      <div>
-        <label className="form-label">10. Número de personas en el hogar <span className="text-text-muted font-normal">(opcional)</span></label>
-        <RadioGroup name="household" options={HOUSEHOLD_OPTIONS} value={data.householdSize} onChange={set("householdSize")} />
-      </div>
-
-      <div className="flex gap-3 pt-2">
-        <button type="button" onClick={onBack} className="btn-outline">
-          ← Volver
+      <div className="btn-row" style={{ marginTop: 32 }}>
+        <button type="button" className="btn btn-link" onClick={onBack}>← Volver</button>
+        <button type="button" className="btn btn-accent flex-1" onClick={handleNext}>
+          Continuar a PSS-14 →
         </button>
-        <button
-          type="button"
-          onClick={() => onNext(data)}
-          disabled={!canProceed}
-          className="btn-primary flex-1"
-        >
-          Continuar →
-        </button>
       </div>
-    </div>
+    </main>
   );
 }

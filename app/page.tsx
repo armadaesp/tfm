@@ -2,74 +2,74 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-      {/* Hero */}
-      <div className="text-center mb-10">
-        <span className="section-label">Estudio de investigación · UNIR 2026</span>
-        <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-text-primary leading-tight">
-          Estrés percibido y bienestar emocional<br className="hidden sm:block" /> en población adulta española
+    <main className="page animate-in">
+      <section className="hero">
+        <div className="hero-eyebrow">
+          <span className="smallcaps">Estudio · UNIR · 2026</span>
+        </div>
+        <h1 className="display">
+          Estrés percibido<br />y bienestar <em>emocional</em><br />en población adulta española.
         </h1>
-        <p className="mt-4 text-text-secondary text-base max-w-xl mx-auto">
-          Estudio sobre la relación entre el estrés percibido y la sintomatología emocional
-          (depresión, ansiedad y estrés) en población adulta no clínica.
+        <p className="lede" style={{ marginTop: 24, maxWidth: 540 }}>
+          Una investigación sobre la relación entre el estrés percibido y la sintomatología
+          emocional —depresión, ansiedad y estrés— en población adulta no clínica.
         </p>
+        <div className="hero-meta">
+          <div className="hero-meta-cell">
+            <div className="hero-meta-label">Duración</div>
+            <div className="hero-meta-value">5–7 minutos</div>
+          </div>
+          <div className="hero-meta-cell">
+            <div className="hero-meta-label">Anonimato</div>
+            <div className="hero-meta-value">Total</div>
+          </div>
+          <div className="hero-meta-cell">
+            <div className="hero-meta-label">Requisito</div>
+            <div className="hero-meta-value">≥ 18 años</div>
+          </div>
+        </div>
+      </section>
+
+      <div className="h-rule">
+        <span className="h-rule-num">i.</span>
+        <h2 className="section-title">¿En qué consiste?</h2>
+        <span className="h-rule-line" />
       </div>
 
-      {/* Info cards */}
-      <div className="grid sm:grid-cols-3 gap-4 mb-10">
-        <div className="card text-center">
-          <div className="text-2xl font-bold text-primary mb-1">5–7 min</div>
-          <p className="text-xs text-text-muted">Tiempo estimado</p>
-        </div>
-        <div className="card text-center">
-          <div className="text-2xl font-bold text-primary mb-1">Anónimo</div>
-          <p className="text-xs text-text-muted">Sin datos identificativos</p>
-        </div>
-        <div className="card text-center">
-          <div className="text-2xl font-bold text-primary mb-1">≥18 años</div>
-          <p className="text-xs text-text-muted">Población general no clínica</p>
-        </div>
+      <p className="body" style={{ marginTop: 12 }}>
+        Responderá un breve cuestionario sociodemográfico y dos escalas validadas en español:
+        la <em>Escala de Estrés Percibido</em> (PSS-14) y la{" "}
+        <em>Escala de Depresión, Ansiedad y Estrés</em> (DASS-21).
+        Sus respuestas son completamente <strong>anónimas</strong>: no se recogen nombre, correo
+        ni dirección IP.
+      </p>
+
+      <div className="h-rule">
+        <span className="h-rule-num">ii.</span>
+        <h2 className="section-title">¿Por qué participar?</h2>
+        <span className="h-rule-line" />
       </div>
 
-      {/* Description */}
-      <div className="card mb-8 space-y-4 text-sm text-text-secondary">
-        <div>
-          <h2 className="font-semibold text-text-primary mb-1">¿Por qué este estudio?</h2>
-          <p>
-            El estrés es uno de los principales problemas de salud mental en la sociedad actual.
-            Este estudio busca analizar cómo afecta a la población española adulta en general,
-            teniendo en cuenta factores laborales y sociodemográficos.
-          </p>
-        </div>
-        <div>
-          <h2 className="font-semibold text-text-primary mb-1">¿En qué consiste?</h2>
-          <p>
-            Responderá a un breve cuestionario sociodemográfico y a dos escalas validadas: la
-            Escala de Estrés Percibido (PSS-14) y la Escala de Depresión, Ansiedad y Estrés
-            (DASS-21).
-          </p>
-        </div>
-        <div>
-          <h2 className="font-semibold text-text-primary mb-1">Protección de datos</h2>
-          <p>
-            Sus respuestas son completamente anónimas. No se recogen datos identificativos, correo
-            electrónico ni dirección IP. Los datos se usarán exclusivamente para investigación académica
-            de la{" "}
-            <strong>Universidad Internacional de La Rioja (UNIR)</strong>.{" "}
-            <Link href="/privacidad" className="text-primary underline">
-              Más información
-            </Link>
-            .
-          </p>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div className="text-center space-y-3">
-        <Link href="/encuesta" className="btn-primary text-base px-8 py-4 inline-block">
-          Participar en el estudio →
+      <p className="body" style={{ marginTop: 12 }}>
+        El estrés es uno de los principales problemas de salud mental contemporáneos. Su
+        contribución ayuda a comprender cómo afecta a la población general, considerando factores
+        sociodemográficos y laborales que rara vez se estudian de forma integrada. Los datos se
+        utilizarán <strong>exclusivamente</strong> para investigación académica de la UNIR.{" "}
+        <Link href="/privacidad" className="inline-link">
+          Política de privacidad
         </Link>
-        <p className="text-xs text-text-muted">
+        .
+      </p>
+
+      <div style={{ marginTop: 48 }}>
+        <Link
+          href="/encuesta"
+          className="btn btn-accent btn-block"
+          style={{ padding: "16px 24px", fontSize: 15 }}
+        >
+          Comenzar el estudio →
+        </Link>
+        <p className="body-sm muted text-center" style={{ marginTop: 12 }}>
           Al participar acepta el uso de sus datos para fines de investigación académica.
         </p>
       </div>

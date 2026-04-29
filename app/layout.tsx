@@ -1,6 +1,20 @@
 import type { Metadata } from "next";
+import { Inter_Tight, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
+  display: "swap",
+});
+
+const sourceSerif4 = Source_Serif_4({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-source-serif-4",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Estudio – Estrés y bienestar emocional | UNIR",
@@ -10,19 +24,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-surface text-text-primary">
+    <html lang="es" className={`${interTight.variable} ${sourceSerif4.variable}`}>
+      <body className="app-shell">
         <Navbar />
-        <div className="flex-1">{children}</div>
-        <footer className="border-t border-surface-border mt-auto">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-muted">
-            <span>© 2026 UNIR – Universidad Internacional de La Rioja</span>
-            <span>
-              DPD UNIR:{" "}
-              <a href="mailto:ppd@unir.net" className="hover:text-primary transition-colors">
-                ppd@unir.net
-              </a>
-            </span>
+        <div style={{ flex: 1 }}>{children}</div>
+        <footer className="footer">
+          <div className="footer-inner">
+            <span>© 2026 · Universidad Internacional de La Rioja</span>
+            <span>DPD UNIR: <a href="mailto:ppd@unir.net">ppd@unir.net</a></span>
           </div>
         </footer>
       </body>
