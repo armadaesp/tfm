@@ -39,7 +39,7 @@ export default function PSS14Step({ onNext, onBack }: Props) {
     onNext(answers as number[]);
   }
 
-  const visibleItems = frozenIdxs && !allAnswered
+  const visibleItems = frozenIdxs !== null
     ? PSS_ITEMS.filter((_, idx) => frozenIdxs.includes(idx))
     : PSS_ITEMS;
 

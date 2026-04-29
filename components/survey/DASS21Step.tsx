@@ -38,7 +38,7 @@ export default function DASS21Step({ onNext, onBack }: Props) {
     onNext(answers as number[]);
   }
 
-  const visibleItems = frozenIdxs && !allAnswered
+  const visibleItems = frozenIdxs !== null
     ? DASS_ITEMS.filter((_, idx) => frozenIdxs.includes(idx))
     : DASS_ITEMS;
 
