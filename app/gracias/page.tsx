@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { computePSS, computeDASS } from "@/lib/scoring";
 
 function pssSeverity(score: number): string {
@@ -74,9 +75,13 @@ export default function GraciasPage() {
 
   return (
     <main className="page page-narrow animate-in thank-you">
-      <div className="seal-mark">
-        <span>E</span>
-      </div>
+      <Image
+        src="/unir-logo.svg"
+        alt="UNIR – Universidad Internacional de La Rioja"
+        width={100}
+        height={29}
+        style={{ display: "block", marginBottom: 8 }}
+      />
       <span className="smallcaps smallcaps-muted">Estudio completado</span>
       <h1 className="display" style={{ fontSize: 36, marginTop: 16 }}>
         Muchas <em>gracias</em><br />por su participación.
