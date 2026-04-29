@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 
 interface Props {
-  onNext: (data: { treatment: string }) => void;
+  onNext: (data: { treatment: string; treatmentDescription: string }) => void;
 }
 
 export default function ConsentStep({ onNext }: Props) {
@@ -11,7 +11,7 @@ export default function ConsentStep({ onNext }: Props) {
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [dataConsent, setDataConsent] = useState(false);
   const [treatment, setTreatment] = useState<string>("");
-  const [showExcluded, setShowExcluded] = useState(false);
+  const [treatmentDescription, setTreatmentDescription] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   function handleScroll() {
@@ -23,27 +23,10 @@ export default function ConsentStep({ onNext }: Props) {
   }
 
   function handleSubmit() {
-    if (treatment === "Sí") {
-      setShowExcluded(true);
-      return;
-    }
-    onNext({ treatment });
+    onNext({ treatment, treatmentDescription });
   }
 
-  if (showExcluded) {
-    return (
-      <div className="card text-center py-12">
-        <div className="text-4xl mb-4">🙏</div>
-        <h2 className="text-xl font-bold text-text-primary mb-3">Gracias por tu interés</h2>
-        <p className="text-text-secondary max-w-md mx-auto">
-          Este estudio está dirigido a población general que no esté recibiendo actualmente
-          tratamiento psicológico o psiquiátrico. Agradecemos tu tiempo y participación.
-        </p>
-      </div>
-    );
-  }
-
-  const canProceed = ageConfirmed && dataConsent && treatment === "No";
+  const canProceed = ageConfirmed && dataConsent && treatment !== "";
 
   return (
     <div className="space-y-6">
@@ -54,7 +37,7 @@ export default function ConsentStep({ onNext }: Props) {
           Estrés percibido y bienestar emocional en población adulta española
         </h1>
         <p className="text-text-secondary text-sm">
-          Tiempo estimado de cumplimentación: <strong>8–10 minutos</strong>
+          Tiempo estimado de cumplimentación: <strong>5–7 minutos</strong>
         </p>
       </div>
 
@@ -69,7 +52,7 @@ export default function ConsentStep({ onNext }: Props) {
             Información sobre el estudio y consentimiento informado
           </p>
           <p className="text-xs text-text-muted">
-            Trabajo de Fin de Estudios · Universidad Internacional de La Rioja (UNIR) · 2026
+            Estudio de investigación · Universidad Internacional de La Rioja (UNIR) · 2026
           </p>
 
           <div>
@@ -137,18 +120,18 @@ export default function ConsentStep({ onNext }: Props) {
             <h3 className="font-semibold text-text-primary mb-1">g) Protección de datos personales</h3>
             <p className="mb-2">
               UNIVERSIDAD INTERNACIONAL DE LA RIOJA, S.A., tratará sus datos de carácter personal con
-              la finalidad de llevar a cabo un trabajo de fin de estudios, así como publicación de sus
+              la finalidad de llevar a cabo un estudio de investigación, así como publicación de sus
               datos en programas de difusión o artículos de interés.
             </p>
             <p className="mb-2">
-              Para el desarrollo de la finalidad sujeta a la formalización del trabajo de fin de
-              estudios, es necesario que usted consienta:
+              Para el desarrollo de la finalidad sujeta a la formalización del estudio de investigación,
+              es necesario que usted consienta:
             </p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Que mis datos sean tratados para formar parte del trabajo de fin de estudios.</li>
+              <li>Que mis datos sean tratados para formar parte del estudio de investigación.</li>
               <li>
                 Que mis datos sean publicados en artículos de interés y publicaciones que pueda
-                llevar a cabo el autor del trabajo de fin de estudios/tesis doctoral.
+                llevar a cabo el autor del estudio de investigación/tesis doctoral.
               </li>
             </ul>
             <p className="mt-2">
@@ -169,17 +152,14 @@ export default function ConsentStep({ onNext }: Props) {
           <div className="border-t border-surface-border pt-4">
             <p className="text-text-primary">
               Con base en lo anterior, declaro haber recibido información suficiente sobre el
-              contenido del trabajo de fin de estudios y haber sido resueltas todas mis dudas y
+              contenido del estudio de investigación y haber sido resueltas todas mis dudas y
               contestadas mis preguntas al respecto.
             </p>
           </div>
 
           <div className="text-xs space-y-1">
-            <p><strong>Investigador:</strong> Daniel Lara Becerra · Universidad Internacional de La Rioja (UNIR)</p>
+            <p><strong>Investigador:</strong> Universidad Internacional de La Rioja (UNIR)</p>
             <p>
-              <strong>Contacto:</strong>{" "}
-              <a href="mailto:danituring@gmail.com" className="text-primary underline">danituring@gmail.com</a>
-              {" · "}
               <strong>DPD UNIR:</strong>{" "}
               <a href="mailto:ppd@unir.net" className="text-primary underline">ppd@unir.net</a>
             </p>
@@ -226,7 +206,7 @@ export default function ConsentStep({ onNext }: Props) {
         </label>
       </div>
 
-      {/* Exclusion filter */}
+      {/* Treatment question */}
       <div className="card">
         <p className="text-sm font-semibold text-text-primary mb-3">
           ¿Está recibiendo actualmente tratamiento psicológico o psiquiátrico?{" "}
@@ -247,10 +227,18 @@ export default function ConsentStep({ onNext }: Props) {
           ))}
         </div>
         {treatment === "Sí" && (
-          <p className="mt-2 text-xs text-text-muted">
-            Este estudio está dirigido a población general no clínica. Si participas en este
-            tratamiento no podrás continuar, pero te agradecemos tu interés.
-          </p>
+          <div className="mt-3">
+            <label className="block text-xs font-medium text-text-primary mb-1">
+              ¿Qué tipo de tratamiento está recibiendo? (opcional)
+            </label>
+            <textarea
+              value={treatmentDescription}
+              onChange={(e) => setTreatmentDescription(e.target.value)}
+              placeholder="Describa brevemente el tratamiento..."
+              rows={2}
+              className="form-select resize-none"
+            />
+          </div>
         )}
       </div>
 

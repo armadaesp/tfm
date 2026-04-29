@@ -5,7 +5,7 @@ export default function HomePage() {
     <main className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
       {/* Hero */}
       <div className="text-center mb-10">
-        <span className="section-label">Trabajo de Fin de Máster · UNIR 2026</span>
+        <span className="section-label">Estudio de investigación · UNIR 2026</span>
         <h1 className="mt-3 text-3xl sm:text-4xl font-bold text-text-primary leading-tight">
           Estrés percibido y bienestar emocional<br className="hidden sm:block" /> en población adulta española
         </h1>
@@ -18,7 +18,7 @@ export default function HomePage() {
       {/* Info cards */}
       <div className="grid sm:grid-cols-3 gap-4 mb-10">
         <div className="card text-center">
-          <div className="text-2xl font-bold text-primary mb-1">8–10 min</div>
+          <div className="text-2xl font-bold text-primary mb-1">5–7 min</div>
           <p className="text-xs text-text-muted">Tiempo estimado</p>
         </div>
         <div className="card text-center">
@@ -46,7 +46,7 @@ export default function HomePage() {
           <p>
             Responderá a un breve cuestionario sociodemográfico y a dos escalas validadas: la
             Escala de Estrés Percibido (PSS-14) y la Escala de Depresión, Ansiedad y Estrés
-            (DASS-21). No se le mostrarán sus puntuaciones al finalizar.
+            (DASS-21).
           </p>
         </div>
         <div>
@@ -54,7 +54,7 @@ export default function HomePage() {
           <p>
             Sus respuestas son completamente anónimas. No se recogen datos identificativos, correo
             electrónico ni dirección IP. Los datos se usarán exclusivamente para investigación académica
-            en el marco del TFM de la{" "}
+            de la{" "}
             <strong>Universidad Internacional de La Rioja (UNIR)</strong>.{" "}
             <Link href="/privacidad" className="text-primary underline">
               Más información

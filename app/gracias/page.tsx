@@ -20,9 +20,10 @@ export default function GraciasPage() {
         </ul>
       </div>
       <p className="text-xs text-text-muted mb-8">
-        Si tiene alguna pregunta sobre el estudio, puede contactar al investigador:{" "}
-        <a href="mailto:danituring@gmail.com" className="text-primary underline">
-          danituring@gmail.com
+        Si tiene alguna pregunta sobre el estudio, puede contactar al Delegado de Protección de
+        Datos de UNIR:{" "}
+        <a href="mailto:ppd@unir.net" className="text-primary underline">
+          ppd@unir.net
         </a>
       </p>
       <Link href="/" className="btn-outline">

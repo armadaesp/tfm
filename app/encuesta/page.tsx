@@ -24,9 +24,11 @@ const PHASE_LABELS: Record<Phase, string> = {
 export default function EncuestaPage() {
   const router = useRouter();
   const [phase, setPhase]               = useState<Phase>("consent");
-  const [demographics, setDemographics] = useState<DemographicsData | null>(null);
-  const [pssAnswers, setPssAnswers]     = useState<number[] | null>(null);
-  const [dassAnswers, setDassAnswers]   = useState<number[] | null>(null);
+  const [demographics, setDemographics]               = useState<DemographicsData | null>(null);
+  const [treatment, setTreatment]                     = useState<string>("");
+  const [treatmentDescription, setTreatmentDescription] = useState<string>("");
+  const [pssAnswers, setPssAnswers]                   = useState<number[] | null>(null);
+  const [dassAnswers, setDassAnswers]                 = useState<number[] | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError]   = useState<string | null>(null);
 
@@ -48,6 +50,8 @@ export default function EncuestaPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           demographics,
+          treatment,
+          treatmentDescription,
           pss: pssAnswers,
           dass: dassAnswers,
           comments,
@@ -80,7 +84,11 @@ export default function EncuestaPage() {
       )}
 
       {phase === "consent" && (
-        <ConsentStep onNext={() => setPhase("demographics")} />
+        <ConsentStep onNext={(data) => {
+          setTreatment(data.treatment);
+          setTreatmentDescription(data.treatmentDescription);
+          setPhase("demographics");
+        }} />
       )}
 
       {phase === "demographics" && (

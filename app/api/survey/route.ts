@@ -10,12 +10,14 @@ export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as {
       demographics: DemographicsData;
+      treatment?: string;
+      treatmentDescription?: string;
       pss: number[];
       dass: number[];
       comments?: string;
     };
 
-    const { demographics, pss, dass, comments } = body;
+    const { demographics, treatment, treatmentDescription, pss, dass, comments } = body;
 
     // Basic validation
     if (!demographics || !Array.isArray(pss) || pss.length !== 14) {
@@ -41,7 +43,8 @@ export async function POST(request: NextRequest) {
           id, participant_id,
           sex, age, education_level, employment_status, occupational_sector,
           children_under_18, dependents, dependent_care_frequency, region,
-          marital_status, household_size, income_level,
+          marital_status, household_size,
+          treatment, treatment_description,
           pss_1, pss_2, pss_3, pss_4, pss_5, pss_6, pss_7,
           pss_8, pss_9, pss_10, pss_11, pss_12, pss_13, pss_14, pss_total,
           dass_1, dass_2, dass_3, dass_4, dass_5, dass_6, dass_7,
@@ -53,7 +56,8 @@ export async function POST(request: NextRequest) {
           ?, ?,
           ?, ?, ?, ?, ?,
           ?, ?, ?, ?,
-          ?, ?, ?,
+          ?, ?,
+          ?, ?,
           ?, ?, ?, ?, ?, ?, ?,
           ?, ?, ?, ?, ?, ?, ?, ?,
           ?, ?, ?, ?, ?, ?, ?,
@@ -74,9 +78,10 @@ export async function POST(request: NextRequest) {
         demographics.dependents,
         demographics.dependentCareFrequency || null,
         demographics.region,
-        demographics.maritalStatus  || null,
-        demographics.householdSize  || null,
-        demographics.incomeLevel    || null,
+        demographics.maritalStatus || null,
+        demographics.householdSize || null,
+        treatment || null,
+        treatmentDescription?.trim() || null,
         // PSS-14
         pss[0],  pss[1],  pss[2],  pss[3],  pss[4],  pss[5],  pss[6],
         pss[7],  pss[8],  pss[9],  pss[10], pss[11], pss[12], pss[13],

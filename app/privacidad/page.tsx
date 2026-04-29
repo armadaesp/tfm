@@ -9,27 +9,16 @@ export default function PrivacidadPage() {
 
       <h1 className="text-2xl font-bold text-text-primary mb-2">Política de Privacidad y Consentimiento Informado</h1>
       <p className="text-sm text-text-muted mb-8">
-        Trabajo de Fin de Estudios · Universidad Internacional de La Rioja (UNIR) · 2026
+        Estudio de investigación · Universidad Internacional de La Rioja (UNIR) · 2026
       </p>
 
       <div className="space-y-8 text-sm text-text-secondary">
-
-        {/* Recomendaciones */}
-        <section className="card bg-blue-50 border-primary/20">
-          <h2 className="font-bold text-text-primary mb-2">Recomendaciones</h2>
-          <p className="italic">
-            ¡Recuerde! Los Trabajos de Fin de Estudios, por norma general, no deberán requerir el
-            tratamiento de datos de carácter personal, por lo que los alumnos podrán trabajar a través
-            de datos anonimizados o, en su caso, a través de bases de datos sintéticas, que no
-            identifiquen o hagan identificable a ninguna persona física.
-          </p>
-        </section>
 
         {/* Formulario de consentimiento */}
         <section>
           <h2 className="section-label mb-3">
             Formulario para prestar consentimiento al tratamiento de datos para la realización y
-            desarrollo de Trabajo Fin de Estudios en su condición de participante
+            desarrollo del estudio de investigación en su condición de participante
           </h2>
 
           <div className="card mb-4">
@@ -125,13 +114,13 @@ export default function PrivacidadPage() {
               <h3 className="font-semibold text-text-primary mb-1">g) Protección de datos personales</h3>
               <p className="mb-3">
                 UNIVERSIDAD INTERNACIONAL DE LA RIOJA, S.A., tratará sus datos de carácter personal con
-                la finalidad de llevar a cabo un trabajo de fin de estudios, así como publicación de sus
+                la finalidad de llevar a cabo un estudio de investigación, así como publicación de sus
                 datos en programas de difusión o artículos de interés.
               </p>
-              <p className="mb-3">Para el desarrollo de la finalidad sujeta a la formalización del trabajo de fin de estudios, es necesario que usted consienta:</p>
+              <p className="mb-3">Para el desarrollo de la finalidad sujeta a la formalización del estudio de investigación, es necesario que usted consienta:</p>
               <ul className="list-none space-y-2 pl-2">
-                <li>☐ Consiento que mis datos sean tratados para formar parte del trabajo de fin de estudios.</li>
-                <li>☐ Que mis datos sean publicados en artículos de interés y publicaciones que pueda llevar a cabo el autor del trabajo de fin de estudios/tesis doctoral.</li>
+                <li>☐ Consiento que mis datos sean tratados para formar parte del estudio de investigación.</li>
+                <li>☐ Que mis datos sean publicados en artículos de interés y publicaciones que pueda llevar a cabo el autor del estudio de investigación/tesis doctoral.</li>
               </ul>
               <p className="mt-3">
                 En el caso de que no consienta que sus datos sean utilizados para la publicación de
@@ -154,7 +143,7 @@ export default function PrivacidadPage() {
         <section className="card border-primary/20">
           <p className="text-text-primary">
             Con base en lo anterior, declaro haber recibido información suficiente sobre el contenido
-            del trabajo de fin de estudios y haber sido resueltas todas mis dudas y contestadas mis
+            del estudio de investigación y haber sido resueltas todas mis dudas y contestadas mis
             preguntas al respecto.
           </p>
           <p className="mt-4">
@@ -166,12 +155,7 @@ export default function PrivacidadPage() {
         <section className="card">
           <h2 className="font-semibold text-text-primary mb-3">Contacto</h2>
           <div className="space-y-1">
-            <p><strong>Investigador:</strong> Daniel Lara Becerra</p>
             <p><strong>Institución:</strong> Universidad Internacional de La Rioja (UNIR)</p>
-            <p>
-              <strong>Email del investigador:</strong>{" "}
-              <a href="mailto:danituring@gmail.com" className="text-primary underline">danituring@gmail.com</a>
-            </p>
             <p>
               <strong>Delegado de Protección de Datos (UNIR):</strong>{" "}
               <a href="mailto:ppd@unir.net" className="text-primary underline">ppd@unir.net</a>

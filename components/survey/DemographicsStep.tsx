@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   SEX_OPTIONS, EDUCATION_OPTIONS, EMPLOYMENT_OPTIONS, EMPLOYED_STATUSES,
   SECTOR_OPTIONS, CHILDREN_OPTIONS, DEPENDENTS_OPTIONS, CARE_FREQUENCY_OPTIONS,
-  REGIONS, MARITAL_OPTIONS, HOUSEHOLD_OPTIONS, INCOME_OPTIONS,
+  REGIONS, MARITAL_OPTIONS, HOUSEHOLD_OPTIONS,
 } from "@/lib/survey-data";
 
 export interface DemographicsData {
@@ -20,7 +20,6 @@ export interface DemographicsData {
   region: string;
   maritalStatus: string;
   householdSize: string;
-  incomeLevel: string;
 }
 
 interface Props {
@@ -58,7 +57,7 @@ export default function DemographicsStep({ onNext, onBack }: Props) {
     sex: "", age: "", educationLevel: "", employmentStatus: "",
     occupationalSector: "", occupationalSectorOther: "", childrenUnder18: "",
     dependents: "", dependentCareFrequency: "", region: "",
-    maritalStatus: "", householdSize: "", incomeLevel: "",
+    maritalStatus: "", householdSize: "",
   });
 
   const set = (key: keyof DemographicsData) => (value: string) =>
@@ -204,12 +203,6 @@ export default function DemographicsStep({ onNext, onBack }: Props) {
       <div>
         <label className="form-label">10. Número de personas en el hogar <span className="text-text-muted font-normal">(opcional)</span></label>
         <RadioGroup name="household" options={HOUSEHOLD_OPTIONS} value={data.householdSize} onChange={set("householdSize")} />
-      </div>
-
-      {/* Nivel de ingresos (opcional) */}
-      <div>
-        <label className="form-label">11. Nivel de ingresos del hogar <span className="text-text-muted font-normal">(opcional)</span></label>
-        <RadioGroup name="income" options={INCOME_OPTIONS} value={data.incomeLevel} onChange={set("incomeLevel")} />
       </div>
 
       <div className="flex gap-3 pt-2">

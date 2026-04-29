@@ -33,6 +33,9 @@ export async function ensureSchema() {
         household_size           TEXT,
         income_level             TEXT,
 
+        treatment                TEXT,
+        treatment_description    TEXT,
+
         pss_1  INTEGER, pss_2  INTEGER, pss_3  INTEGER, pss_4  INTEGER,
         pss_5  INTEGER, pss_6  INTEGER, pss_7  INTEGER, pss_8  INTEGER,
         pss_9  INTEGER, pss_10 INTEGER, pss_11 INTEGER, pss_12 INTEGER,
@@ -60,4 +63,13 @@ export async function ensureSchema() {
        ON survey_responses (created_at DESC)`,
     )
     .run();
+
+  // Migration: add columns that didn't exist in earlier schema versions
+  for (const colDef of ["treatment TEXT", "treatment_description TEXT"]) {
+    try {
+      await db.prepare(`ALTER TABLE survey_responses ADD COLUMN ${colDef}`).run();
+    } catch {
+      // Column already exists — safe to ignore
+    }
+  }
 }
